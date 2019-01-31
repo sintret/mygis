@@ -1,0 +1,28 @@
+{
+  "name": "yingnimap",
+  "version": "1.0.0",
+  "description": "yinni map server app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "data-store": "^3.1.0",
+    "koa": "^2.5.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-ejs": "^4.2.0",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "koa-views-render": "0.0.1",
+    "koa2-cors": "^2.0.6",
+    "moment": "^2.24.0",
+    "momentjs": "^2.0.0",
+    "morgan": "^1.9.1",
+    "node-cron": "^2.0.3",
+    "request": "^2.88.0"
+  }
+}
