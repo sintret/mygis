@@ -203,16 +203,31 @@
                     "processCompleted" === n.type ? e(i.readFeatures(r)) : t("err")
                 })
             })
-        }, getFeaturesBySQL: function (e, t, n, a) {
+        }, getFeaturesByJSON: function (e, t, n) {
+
+            return new Promise(function (t, n) {
+                return new ol.supermap.FeatureService(e).getFeaturesByJSON(e, function (e) {
+
+                    t(i.readFeatures(e))
+                })
+            })
+
+        }, getFeaturesBySQL: function (e, t, n, a, datas) {
+            datas = datas || null
             var o = arguments.length > 4 && void 0 !== arguments[4] ? arguments[4] : 0, r = arguments.length > 5 && void 0 !== arguments[5] ? arguments[5] : 100, A = new SuperMap.GetFeaturesBySQLParameters({
                 fromIndex: o,
                 toIndex: r,
                 queryParameter: {name: n + "@" + t, attributeFilter: a},
                 datasetNames: [t + ":" + n]
             });
+
             return new Promise(function (t, n) {
                 return new ol.supermap.FeatureService(e).getFeaturesBySQL(A, function (e) {
-                    t(i.readFeatures(e.result.features))
+                    if(datas == null){
+                        t(i.readFeatures(e.result.features));
+                    } else {
+                        t(i.readFeatures(datas));
+                    }
                 })
             })
         }, template: function (e, t) {
@@ -1838,14 +1853,30 @@
                     e.menus.toggle()
                 }), this.searchBtn.click(function () {
                     var t = e.$(".search-input > input").val();
-                    "" !== t && l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + t + "%'").then(function (t) {
-                        e.searchList.setResult(t)
+
+                    $.getJSON("/search/" + t, function (myData) {
+                        "" !== t && l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + t + "%testt'", myData).then(function (t) {
+                            e.searchList.setResult(t);
+                        })
                     })
                 }), this.$(".search-input").keyup(function (t) {
                     var n = t.keyCode, a = $.trim(e.$(".search").val());
-                    13 == n && "" != a && l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + a + "%'").then(function (t) {
-                        e.searchList.setResult(t)
-                    }), 8 == n && "" == a && e.searchList.removeResult()
+
+                    if(13 == n && "" != a){
+
+                        $.getJSON("/search/" + a, function (myData) {
+
+                            l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + a + "%testt'", myData).then(function (t) {
+                                e.searchList.setResult(t);
+                            }), 8 == n && "" == a && e.searchList.removeResult()
+                        })
+                    }
+
+
+                    /*         13 == n && "" != a && l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + a + "%'").then(function (t) {
+                     e.searchList.setResult(t)
+                     }), 8 == n && "" == a && e.searchList.removeResult()
+                     })*/
                 })
             }
         }]), t
@@ -3024,7 +3055,7 @@
                     layerIdInMap: "ptDangerLayer",
                     layerName: "Satuan Kerja",
                     layerVisible: !this.ptDangerLayer || this.ptDangerLayer.getVisible()
-                },{
+                }, {
                     layerIdInMap: "pyDangerLayer",
                     layerName: "Disaster Polygon",
                     layerVisible: !this.pyDangerLayer || this.pyDangerLayer.getVisible()
@@ -3399,8 +3430,8 @@
     //var ttt = $.get("/data.json")
 
 
-        t.a = simasda;
-    
+    t.a = simasda;
+
 }, function (e, t, n) {
     "use strict";
     function a(e, t) {

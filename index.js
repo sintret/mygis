@@ -9,6 +9,8 @@ const render = require('koa-ejs');
 const path = require('path');
 const moment = require('moment')
 
+const apis = require('./apis')
+
 const Store = require('data-store');
 const store = new Store('app', {path: 'data.json'});
 
@@ -208,7 +210,8 @@ router.post('/api/login', async(ctx, next) => {
         ctx.body = {success: false, result: "username or password is wrong"}
     }
     next();
-})
+});
+
 router.post('/api/edit/:type/:username/*', async(ctx, next) => {
     var permissionObj = await getUserPermision(ctx.params.username);
     var permission = permissionObj.flag;
@@ -263,130 +266,33 @@ router.delete('/api/edit/:type/:username/*', async(ctx, next) => {
     next();
 });
 
-function stest() {
+router.get('/cron', async(ctx, next) => {
 
+    var t = await apis.searchData();
+    store.set("search", t);
 
-    var t = {
-        'queryMode': 'SqlQuery',
-        'queryParameters': {
-            'customParams': null,
-            'prjCoordSys': null,
-            'expectCount': 100000,
-            'networkType': "LINE",
-            'queryOption': "ATTRIBUTEANDGEOMETRY",
-            'queryParams': [{
-                'attributeFilter': "smid&gt;0",
-                'name': "disaster_pt@Disaster#1",
-                'joinItems': null,
-                'linkItems': null,
-                'ids': null,
-                'orderBy': null,
-                'groupBy': null,
-                'fields': null
-            }
-            ],
-            'startRecord': 0,
-            'holdTime': 10,
-            'returnCustomResult': false
-        }
-    }
-    return new Promise(function (resolve) {
+    ctx.body = "cron ok";
+});
+router.get('/cron2', async(ctx, next) => {
 
-        var options = {
-            method: 'POST',
-            url: 'http://igis.basarnas.go.id:8098/portalproxy/iserver/services/map-SARData/rest/maps/DisasterMap/queryResults.json?returnContent=true',
-            headers: {
-                'postman-token': 'df81d572-08ec-0c49-5bc2-40dfde0dcbc5',
-                'cache-control': 'no-cache',
-                'content-type': 'application/x-www-form-urlencoded'
-            },
-            body: JSON.stringify(t)
-        };
+    var simasda = await apis.simasda();
 
-        return new Promise(function (resolve) {
+    console.log(simasda)
 
-            request(options, function (error, response, body) {
-                if (error) {
-                    resolve(error)
-                }
-
-                resolve(body)
-
-                console.log(body);
-            });
-        })
-    })
-}
-
-function getTest() {
-
-    var t = {
-        'queryMode': 'SqlQuery',
-        'queryParameters': {
-            'customParams': null,
-            'prjCoordSys': null,
-            'expectCount': 100000,
-            'networkType': "LINE",
-            'queryOption': "ATTRIBUTEANDGEOMETRY",
-            'queryParams': [{
-                'attributeFilter': "smid&gt;0",
-                'name': "disaster_pt@Disaster#1",
-                'joinItems': null,
-                'linkItems': null,
-                'ids': null,
-                'orderBy': null,
-                'groupBy': null,
-                'fields': null
-            }
-            ],
-            'startRecord': 0,
-            'holdTime': 10,
-            'returnCustomResult': false
-        }
-    }
-    return new Promise(function (resolve) {
-        axios.post('http://igis.basarnas.go.id:8098/portalproxy/iserver/services/map-SARData/rest/maps/DisasterMap/queryResults.json?returnContent=true', t).then(function (res) {
-
-            resolve(res);
-        }).catch(function (err) {
-            console.log('http-token', err);
-            resolve(err.message);
-        });
-    })
-}
+    store.set("simasda", simasda)
+    ctx.body = "cron ok";
+});
 
 router.get('/test', async(ctx, next) => {
     console.log('test')
 
-    ctx.body = moment.format("YYYY");
+    ctx.body = await apis.myRequest(apis.mobilePositionUrl,apis.mobilePositionQuery)
     next();
 });
 
-function sarOffice() {
-    var options = {
-        method: 'POST',
-        url: 'http://igis.basarnas.go.id:8098/portalproxy/iserver/services/map-SARData/rest/maps/SARoffice/queryResults.json',
-        qs: {returnContent: 'true'},
-        headers: {
-            'postman-token': '96f73e31-9ec5-6499-31e0-e01bfd6502a3',
-            'cache-control': 'no-cache'
-        },
-        body: '{\'queryMode\':\'SqlQuery\',\'queryParameters\':{\'customParams\':null,\'prjCoordSys\':null,\'expectCount\':100000,\'networkType\':"LINE",\'queryOption\':"ATTRIBUTEANDGEOMETRY",\'queryParams\':[{\'attributeFilter\':"smid&gt;0",\'name\':"POS_SAR@SARoffice",\'joinItems\':null,\'linkItems\':null,\'ids\':null,\'orderBy\':null,\'groupBy\':null,\'fields\':null}],\'startRecord\':0,\'holdTime\':10,\'returnCustomResult\':false}}: \r\n'
-    };
+router.get('/simasda', async(ctx, next) => {
 
-
-    return new Promise(function (resolve) {
-        request(options, function (error, response, body) {
-            if (error) throw new Error(error);
-
-            resolve(body)
-        });
-    })
-}
-
-router.get("/sar-office", async(ctx, next) => {
-
-    ctx.body = await sarOffice();
+    ctx.body = await apis.simasda();
     next();
 });
 
@@ -398,9 +304,38 @@ render(app, {
     debug: true
 });
 
+router.get("/search/:text", async(ctx, next) => {
+    var text = ctx.params.text;
+
+    console.log(text)
+    var myArr = [];
+
+    if(text.length > 1){
+        var arr = store.get("search");
+
+        var myArr = apis.searchFunction(arr, text);
+    }
+
+    ctx.body = myArr;
+});
+
+router.get("/apis", async(ctx, next) => {
+
+    var content = await apis.searchData();
+
+    store.set("search", content)
+
+    const jsonRender = {content: content};
+    await ctx.render('test', {
+        jsonRender
+    });
+});
 
 router.get("/", async(ctx, next) => {
+
     const getData = store.get("simasda")
+
+    console.log(getData)
 
     //var simasda = require("./build")(getData)
     const jsonRender = {simasda: getData}

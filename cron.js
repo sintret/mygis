@@ -5,6 +5,7 @@ const Store = require('data-store');
 const store = new Store('app', {path: 'data.json'});
 const request = require('request')
 const axios = require("axios")
+const apis = require("./apis")
 
 
 function simasda(year) {
@@ -39,11 +40,20 @@ async function getSimasda() {
     store.set('simasda', query);
 }
 
+
+async function getSearch() {
+
+    var search = await apis.searchData();
+    store.set("search", search)
+    
+}
+
 var myTasks = {}
 
 myTasks.crawl = cron.schedule('30 5,7,9,10,12,14,16,18,20,22,23 * * *', () => {
 
-    getSimasda
+    getSimasda();
+    getSearch();
 
 }, {
     scheduled: true
