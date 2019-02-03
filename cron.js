@@ -6,6 +6,7 @@ const store = new Store('app', {path: 'data.json'});
 const request = require('request')
 const axios = require("axios")
 const apis = require("./apis")
+const urlsConfig = require('./config')
 
 
 function simasda(year) {
@@ -60,4 +61,3 @@ myTasks.crawl = cron.schedule('30 5,7,9,10,12,14,16,18,20,22,23 * * *', () => {
 });
 
 module.exports = myTasks;
-
