@@ -2,6 +2,7 @@ var request = require("request");
 const axios = require("axios")
 const moment = require('moment')
 const urlsConfig = require('./config')
+const G = require('./Geopoint')
 
 var apis = {};
 
@@ -246,11 +247,38 @@ apis.simasda = function () {
             var query = [];
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i].status_berita == "AKTIF" && arr[i].longitude.length > 1 && i < 20) {
-                    var latitude = parseFloat(arr[i].latitude);
+
+                    var obj = arr[i];
+                    var latitude = arr[i].latitude;
+                    var longitude = 0
+
+                    if (latitude.indexOf("°") > -1) {
+
+                        var lon = arr[i].latitude;
+                        var explodeLon = lon.split("'");
+
+                        var lat = arr[i].longitude;
+                        var explodeLat = lat.split("'");
+
+
+                        var point = new G.GeoPoint(explodeLon+"'", explodeLat+"'");
+
+                        latitude = point.getLatDec();
+                        longitude = point.getLonDec();
+                        
+                    } else {
+                        latitude = parseFloat(arr[i].latitude);
+                        longitude = parseFloat(arr[i].longitude);
+
+
+                    }
+
+                    obj.latitude = latitude;
+                    obj.longitude = longitude;
 
                     if (latitude < 200 && latitude > -200) {
 
-                        query.push(arr[i])
+                        query.push(obj)
 
                     }
                 }
@@ -292,15 +320,15 @@ apis.buildQuery = function (json, name) {
                     obj = apis.disasterProperty(datas[i])
                 } else if (name == apis.sarOfficeName) {
                     obj = apis.sarOfficeProperty(datas[i])
-                } else if(name == apis.hospitalName){
+                } else if (name == apis.hospitalName) {
                     obj = apis.hospitalProperty(datas[i])
-                } else if(name == apis.policeName){
+                } else if (name == apis.policeName) {
                     obj = apis.policeProperty(datas[i])
-                } else if(name == apis.logdataName){
+                } else if (name == apis.logdataName) {
                     obj = apis.logdataProperty(datas[i])
-                } else if(name == apis.helicopterName){
+                } else if (name == apis.helicopterName) {
                     obj = apis.helicopterProperty(datas[i])
-                } else if(name == apis.mobilePositionName){
+                } else if (name == apis.mobilePositionName) {
                     obj = apis.mobilePositionProperty(datas[i])
                 }
 
@@ -576,7 +604,6 @@ apis.sarOfficeProperty = function (data) {
 }
 
 
-
 /*
  {
  "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
@@ -657,7 +684,6 @@ apis.hospitalProperty = function (data) {
 
     return obj;
 }
-
 
 
 /*
@@ -802,7 +828,7 @@ apis.logdataProperty = function (data) {
     properties.SMY = data.fieldValues[2];
     properties.SMLIBTILEID = data.fieldValues[3];
     properties.SMUSERID = data.fieldValues[4];
-    properties.NAME = data.fieldValues[6] + " "+ data.fieldValues[7];
+    properties.NAME = data.fieldValues[6] + " " + data.fieldValues[7];
     properties.NAME_NATIVE = "";
     properties.NAME_EN = "";
     properties.NAME_CH = "";
@@ -822,8 +848,6 @@ apis.logdataProperty = function (data) {
 
     return obj;
 }
-
-
 
 
 /*
@@ -906,8 +930,6 @@ apis.helicopterProperty = function (data) {
 
     return obj;
 }
-
-
 
 
 /*

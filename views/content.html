@@ -135,9 +135,9 @@
         <div>
             <form class="form-inline" action="/">
                 <label for="lat">Latitude:</label>
-                <input type="text" value="-6.21462" id="lat" placeholder="Enter latitude" name="lat">
+                <input type="text" value="-1141558.12948458" id="lat" placeholder="Enter latitude" name="lat">
                 <label for="lon">Longitude:</label>
-                <input type="text" value="106.84513" id="lon" placeholder="Enter Longitude" name="lon">
+                <input type="text" value="13759597.0017532" id="lon" placeholder="Enter Longitude" name="lon">
 
                 <button type="button" id="searchcoordinatebtn">Search</button>
             </form>
@@ -161,37 +161,58 @@
         }
     }
 
+    function dtm(lon,lat) {
+        var x = lon * 20037508.34 / 180;
+        var y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+        y = y * 20037508.34 / 180;
+        return [x, y]
+    }
+
 
     $("#searchcoordinatebtn").on("click", function () {
 
+        var lat = $("#lat").val();
+        var lon = $("#lon").val();
+
+
+        if(lat == "" || lon == ""){
+
+            alert("Latitude or Longitude empty");
+            return false;
+        }
+
+        //var t = dtm(lon,lat);
+
+        var latitude = lat;
+        var longitude = lon;
+
+
         var map = window.olMap;
         map.setView(new ol.View({
-            center: [$("#lon").val(), $("#lat").val()],
-            zoom: 7,
-            projection: "EPSG:4326"
+            center: [longitude, latitude],
+            zoom: 6,
+            projection: "EPSG:3857"
         }));
+        var point = new ol.geom.Point([longitude, latitude]);
+
+        var iconStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+                src: '/Plot/images/BasicCell/20.png'
+            }))
+        });
+        var feature = new ol.Feature(point);
+        feature.setStyle(iconStyle);
+        var pointSource = new ol.source.Vector({
+            features: [feature]
+        });
+        var vectorLayer = new ol.layer.Vector({
+            source: pointSource
+        });
+        map.addLayer(vectorLayer);
 
         $(".close").click();
-
-        var point = new ol.geom.Point([$("#lon").val(), $("#lat").val()]);
-         var iconStyle = new ol.style.Style({
-         image: new ol.style.Icon(({
-         src: '/Plot/images/BasicCell/20.png'
-         }))
-         });
-         var feature = new ol.Feature(point);
-         feature.setStyle(iconStyle);
-         var pointSource = new ol.source.Vector({
-         features: [feature]
-         });
-         var vectorLayer = new ol.layer.Vector({
-         source: pointSource
-         });
-         map.addLayer(vectorLayer);
-
-        //map.setCenter(new map.LonLat(116.383572, 39.914714), 10);
-
     })
+
 </script>
 </body>
 </html>
