@@ -2861,7 +2861,10 @@
                         projection: "EPSG:3857",
                         source: this.baseSource,
                         zIndex: 0
-                    }), this.map.setView(this.view), this.map.addLayer(this.baseTile)
+                    }), this.map.setView(this.view), this.map.addLayer(this.baseTile);
+
+                    window.baseMap = this.map;
+
                 }
             }
         }, {
@@ -3123,7 +3126,7 @@
                 }), olMap.on("click", function (t) {
                     var n = olMap.getFeaturesAtPixel(t.pixel, {
                         layerFilter: function (t) {
-                            return t === e.logDataLayer || t === e.simasdaLayer
+                            return t === e.logDataLayer || t === e.simasdaLayer || t === e.policeLayer || t === e.hospitalLayer
                         }
                     });
                     if (n && n.length > 0) {
