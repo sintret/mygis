@@ -674,6 +674,7 @@
             }
             return new ol.style.Style({
                 fill: new ol.style.Fill({color: n}),
+                fillOpacity : 0.1,
                 stroke: new ol.style.Stroke({width: 2, color: "#000000"})
             })
         }
@@ -2862,9 +2863,6 @@
                         source: this.baseSource,
                         zIndex: 0
                     }), this.map.setView(this.view), this.map.addLayer(this.baseTile);
-
-                    window.baseMap = this.map;
-
                 }
             }
         }, {
@@ -3011,8 +3009,8 @@
                         positioning: "bottom-center"
                     }), new ol.Overlay({offset: [5, -22], id: "danger-window", positioning: "bottom-center"})],
                     target: "mapviewer"
-                }), this.changeBaseLayer(0), this.bindMapEvents(), olMap.addLayer(this.areaLayer), olMap.addLayer(this.closetLayer), olMap.addLayer(this.searchLayer), olMap.addLayer(this.measureLayer), olMap.addLayer(this.pathLayer), olMap.addLayer(this.editLayer), olMap.addLayer(this.ptDangerLayer), olMap.addLayer(this.pyDangerLayer), olMap.addLayer(this.sarOfficeLayer), olMap.addLayer(this.helicopterLayer), olMap.addLayer(this.mobileLayer), olMap.addLayer(this.logDataLayer), olMap.addLayer(this.hospitalLayer), olMap.addLayer(this.policeLayer), olMap.addLayer(this.simasdaLayer), this.addMapControls(), setTimeout(function () {
-                    e.trigger("mapviewerinitialized")
+                }), this.changeBaseLayer(2), this.bindMapEvents(), olMap.addLayer(this.areaLayer), olMap.addLayer(this.closetLayer), olMap.addLayer(this.searchLayer), olMap.addLayer(this.measureLayer), olMap.addLayer(this.pathLayer), olMap.addLayer(this.editLayer), olMap.addLayer(this.ptDangerLayer), olMap.addLayer(this.pyDangerLayer), olMap.addLayer(this.sarOfficeLayer), olMap.addLayer(this.helicopterLayer), olMap.addLayer(this.mobileLayer), olMap.addLayer(this.logDataLayer), olMap.addLayer(this.hospitalLayer), olMap.addLayer(this.policeLayer), olMap.addLayer(this.simasdaLayer), this.addMapControls(), setTimeout(function () {
+                    e.trigger("mapviewerinitialized");
                 })
             }
         }, {
@@ -3295,7 +3293,7 @@
                     var c = a[s];
                     n.test(c) || "geometry" === c || "PLOTTING" === c || "PICTURE" === c || this.content.append('<div class="danger-items"><span>' + c + ":</span><span>" + e[c] + "</span></div>")
                 }
-                this.content.append(this.getPlotLink(i, A)), this.content.append(this.getImagePreview(e.PICTURE)), this.content.append(this.getFeatureNodes(this.feature)), this.typeImage.css("background-image", "url(" + E[o] + ")")
+                this.content.append(this.getPlotLink(i, A)), this.content.append(this.getImagePreview(e.PICTURE)), this.content.append(this.getFeatureNodes(this.feature)), this.typeImage.css("background-image", "url(" + E[o] + ")");
             }
         }]), t
     }(i.a);

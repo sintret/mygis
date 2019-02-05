@@ -138,7 +138,6 @@
                 <input type="text" value="-1141558.12948458" id="lat" placeholder="Enter latitude" name="lat">
                 <label for="lon">Longitude:</label>
                 <input type="text" value="13759597.0017532" id="lon" placeholder="Enter Longitude" name="lon">
-
                 <button type="button" id="searchcoordinatebtn">Search</button>
             </form>
         </div>
@@ -146,6 +145,10 @@
 </div>
 
 <script>
+    window.onload = function () {
+      $(".basemap-thumb").removeClass("selected");
+        $(".basemap-thumb").eq(2).addClass("selected")
+    };
     var modal = document.getElementById('myModal');
     var btn = document.getElementById("myBtn");
     var span = document.getElementsByClassName("close")[0];
@@ -195,8 +198,8 @@
         var map = mapz;
         map.setView(new ol.View({
             center: [longitude, latitude],
-            zoom: 7,
-            //projection: "EPSG:3857"
+            zoom: 8,
+            projection: "EPSG:3857"
         }));
         var point = new ol.geom.Point([longitude, latitude]);
         var iconStyle = new ol.style.Style({
@@ -215,18 +218,26 @@
         map.addLayer(vectorLayer);
         $(".close").click();
 
-       /* setTimeout(function(){
+        $(".ol-unselectable").one("click", function () {
+            //window.changeBaseLayer;
+        });
 
-        }, 6000);*/
+        $(".search-menus-content").hide();
+        $(".result-content.nano-content").hide();
+        $(".ol-unselectable").click();
+        $('body').click();
+
+        $(".search-toolbar.search-menus.font_family.icon-Hamburger").one("click", function () {
+
+            var selected = $(".basemap-thumb.selected");
+            $(".basemap-thumb").eq(1).click();
+            $(".basemap-thumb").eq(0).click();
+            selected.click();
+        });
+
     }
 
-    $(".search-toolbar.search-menus.font_family.icon-Hamburger").on("click", function () {
 
-        var selected = $(".basemap-thumb.selected");
-        $(".basemap-thumb").eq(1).click();
-        $(".basemap-thumb").eq(0).click();
-        selected.click();
-    });
 </script>
 </body>
 </html>
