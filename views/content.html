@@ -195,7 +195,7 @@
         var map = mapz;
         map.setView(new ol.View({
             center: [longitude, latitude],
-            zoom: 6,
+            zoom: 7,
             //projection: "EPSG:3857"
         }));
         var point = new ol.geom.Point([longitude, latitude]);
@@ -215,10 +215,18 @@
         map.addLayer(vectorLayer);
         $(".close").click();
 
-        $(".basemap-thumb").eq(1).click();
-        $(".basemap-thumb").eq(0).click();
+       /* setTimeout(function(){
+
+        }, 6000);*/
     }
 
+    $(".search-toolbar.search-menus.font_family.icon-Hamburger").on("click", function () {
+
+        var selected = $(".basemap-thumb.selected");
+        $(".basemap-thumb").eq(1).click();
+        $(".basemap-thumb").eq(0).click();
+        selected.click();
+    });
 </script>
 </body>
 </html>
