@@ -174,6 +174,11 @@
         var lat = $("#lat").val();
         var lon = $("#lon").val();
 
+        goto(lon,lat);
+
+    });
+
+    function goto(lon,lat) {
 
         if(lat == "" || lon == ""){
 
@@ -186,18 +191,17 @@
         var latitude = lat;
         var longitude = lon;
 
-
-        var map = window.olMap;
+        var mapz = window.olMap;
+        var map = mapz;
         map.setView(new ol.View({
             center: [longitude, latitude],
             zoom: 6,
-            projection: "EPSG:3857"
+            //projection: "EPSG:3857"
         }));
         var point = new ol.geom.Point([longitude, latitude]);
-
         var iconStyle = new ol.style.Style({
             image: new ol.style.Icon(({
-                src: '/Plot/images/BasicCell/20.png'
+                src: '/images/red_marker.png'
             }))
         });
         var feature = new ol.Feature(point);
@@ -209,9 +213,11 @@
             source: pointSource
         });
         map.addLayer(vectorLayer);
-
         $(".close").click();
-    })
+
+        $(".basemap-thumb").eq(1).click();
+        $(".basemap-thumb").eq(0).click();
+    }
 
 </script>
 </body>
