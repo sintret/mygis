@@ -270,21 +270,16 @@ router.get('/cron', async(ctx, next) => {
 
     var t = await apis.searchData();
     store.set("search", t);
-
     ctx.body = "cron ok";
 });
 router.get('/cron2', async(ctx, next) => {
 
     var simasda = await apis.simasda();
-
-    console.log(simasda)
-
     store.set("simasda", simasda)
-    ctx.body = "cron ok";
+    ctx.body = "cron2 ok";
 });
 
 router.get('/test', async(ctx, next) => {
-    console.log('test')
 
     ctx.body = await apis.myRequest(apis.mobilePositionUrl,apis.mobilePositionQuery)
     next();
@@ -305,26 +300,94 @@ render(app, {
 });
 
 router.get("/search/:text", async(ctx, next) => {
-    var text = ctx.params.text;
 
-    console.log(text)
+    var text = ctx.params.text;
     var myArr = [];
 
     if(text.length > 1){
-        var arr = store.get("search");
-
-        var myArr = apis.searchFunction(arr, text);
+        var myArr = apis.searchFunction(store.get("search"), text);
     }
 
     ctx.body = myArr;
 });
 
+router.post("/search/featureResults.json", async(ctx, next) => {
+
+    var query = ctx.request.body;
+    var str = JSON.stringify(query);
+    var explode = str.split("text:");
+    var exc = explode[1].split('"');
+
+    var text = exc[0].replace(/\\/g,"");
+    console.log(text)
+    var obj = {}
+    if(text.length > 1){
+        obj = apis.searchFunction(store.get("search"), text);
+    }
+
+    ctx.body = obj;
+});
+
+
+router.post("/searchx/featureResults.json", async (ctx, next) => {
+    ctx.body = {
+        "features" : [{
+            "stringID" : null,
+            "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
+            "geometry" : {
+                "center" : {
+                    "x" : 1.29481414995633E7,
+                    "y" : -981398.567620345
+                },
+                "parts" : [1],
+                "style" : null,
+                "prjCoordSys" : null,
+                "id" : 2154,
+                "type" : "POINT",
+                "partTopo" : null,
+                "points" : [{
+                    "x" : 1.29481414995633E7,
+                    "y" : -981398.567620345
+                }
+                ]
+            },
+            "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+            "ID" : 2154,
+            "name" : "Postyan"
+        }, {
+            "stringID" : null,
+            "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
+            "geometry" : {
+                "center" : {
+                    "x" : 1.2829405781842E7,
+                    "y" : -972718.424090127
+                },
+                "parts" : [1],
+                "style" : null,
+                "prjCoordSys" : null,
+                "id" : 7179,
+                "type" : "POINT",
+                "partTopo" : null,
+                "points" : [{
+                    "x" : 1.2829405781842E7,
+                    "y" : -972718.424090127
+                }
+                ]
+            },
+            "fieldValues" : ["7179", "1.2829405781842E7", "-972718.424090127", "1", "0", "Halte Danuposo", "", "", "", "bus_stop", "highway", "-1"],
+            "ID" : 7179
+        }
+        ],
+        "featureUriList" : [],
+        "totalCount" : 1353,
+        "featureCount" : 101
+    }
+})
+
 router.get("/apis", async(ctx, next) => {
 
     var content = await apis.searchData();
-
     store.set("search", content)
-
     const jsonRender = {content: content};
     await ctx.render('test', {
         jsonRender
@@ -333,12 +396,7 @@ router.get("/apis", async(ctx, next) => {
 
 router.get("/", async(ctx, next) => {
 
-    const getData = store.get("simasda")
-
-    console.log(getData)
-
-    //var simasda = require("./build")(getData)
-    const jsonRender = {simasda: getData}
+    const jsonRender = {simasda: store.get("simasda")}
     await ctx.render('content', {
         jsonRender
     });

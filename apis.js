@@ -261,11 +261,11 @@ apis.simasda = function () {
                         var explodeLat = lat.split("'");
 
 
-                        var point = new G.GeoPoint(explodeLon+"'", explodeLat+"'");
+                        var point = new G.GeoPoint(explodeLon + "'", explodeLat + "'");
 
                         latitude = point.getLatDec();
                         longitude = point.getLonDec();
-                        
+
                     } else {
                         latitude = parseFloat(arr[i].latitude);
                         longitude = parseFloat(arr[i].longitude);
@@ -339,10 +339,11 @@ apis.buildQuery = function (json, name) {
         return features;
     }
     catch (e) {
-        alert('invalid json');
+        console.log(JSON.stringify(e));
         return null;
     }
 }
+
 
 apis.searchData = async function () {
 
@@ -402,15 +403,13 @@ apis.searchData = async function () {
     return f;
 }
 
-
 apis.searchFunction = function (arr, text) {
 
     var search = text.toLowerCase();
     var myArr = []
     for (var i = 0; i < arr.length; i++) {
 
-        var myString = arr[i].properties.NAME || "";
-        console.log(myString)
+        var myString = arr[i].name || "";
         if (myString.length > 0) {
 
             var mytext = myString.toLowerCase();
@@ -421,8 +420,10 @@ apis.searchFunction = function (arr, text) {
     }
 
     var obj = {}
-    obj.type = 'FeatureCollection';
     obj.features = myArr;
+    obj.featureUriList = [];
+    obj.totalCount = myArr.length;
+    obj.featureCount = myArr.length;
 
     return obj;
 }
@@ -466,34 +467,32 @@ apis.searchFunction = function (arr, text) {
  to
 
  {
- "type" : "Feature",
- "properties" : {
- "SMID" : "459008",
- "SMX" : "1.29959100622925E7",
- "SMY" : "418922.86921557",
- "SMLIBTILEID" : "1",
- "SMUSERID" : "0",
- "NAME" : "Warung Maskampret",
- "NAME_NATIVE" : "",
- "NAME_EN" : "",
- "NAME_CH" : "",
- "KIND" : "restaurant",
- "TYPE" : "tourism",
- "FIELD_SMGEOPOSITION" : "-1",
  "stringID" : null,
- "ID" : 459008
- },
+ "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
  "geometry" : {
- "type" : "Point",
- "coordinates" : [12995910.0622925, 418922.86921557]
+ "center" : {
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
  },
- "id" : 459008
+ "parts" : [1],
+ "style" : null,
+ "prjCoordSys" : null,
+ "id" : 2154,
+ "type" : "POINT",
+ "partTopo" : null,
+ "points" : [{
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
+ }
+ ]
+ },
+ "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+ "ID" : 2154,
+ "name" : "Postyan"
  }
  */
 apis.disasterProperty = function (data) {
 
-    var obj = {}
-    obj.type = "Feature";
     var properties = {}
     properties.SMID = data.fieldValues[0];
     properties.SMX = data.geometry.center.x;
@@ -509,14 +508,21 @@ apis.disasterProperty = function (data) {
     properties.FIELD_SMGEOPOSITION = -1;
     properties.stringID = null;
     properties.ID = data.ID;
-    obj.properties = properties;
 
-    var geometry = {}
-    geometry.type = "Point";
-    geometry.coordinates = [data.geometry.center.x, data.geometry.center.y];
+    var obj = {}
+    obj.stringID = null;
+    obj.fieldNames = ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"];
+    var geometry = data.geometry;
     obj.geometry = geometry;
 
+    var fieldValues = [
+        properties.SMID, properties.SMX, properties.SMY, properties.SMLIBTILEID, properties.SMUSERID, properties.NAME, properties.NAME_NATIVE,
+        properties.NAME_EN, properties.NAME_CH, properties.KIND, properties.TYPE, properties.FIELD_SMGEOPOSITION
+    ];
+    obj.fieldValues = fieldValues;
+
     obj.ID = data.ID;
+    obj.name = properties.NAME;
 
     return obj;
 }
@@ -548,34 +554,32 @@ apis.disasterProperty = function (data) {
  to
 
  {
- "type" : "Feature",
- "properties" : {
- "SMID" : "459008",
- "SMX" : "1.29959100622925E7",
- "SMY" : "418922.86921557",
- "SMLIBTILEID" : "1",
- "SMUSERID" : "0",
- "NAME" : "Warung Maskampret",
- "NAME_NATIVE" : "",
- "NAME_EN" : "",
- "NAME_CH" : "",
- "KIND" : "restaurant",
- "TYPE" : "tourism",
- "FIELD_SMGEOPOSITION" : "-1",
  "stringID" : null,
- "ID" : 459008
- },
+ "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
  "geometry" : {
- "type" : "Point",
- "coordinates" : [12995910.0622925, 418922.86921557]
+ "center" : {
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
  },
- "id" : 459008
+ "parts" : [1],
+ "style" : null,
+ "prjCoordSys" : null,
+ "id" : 2154,
+ "type" : "POINT",
+ "partTopo" : null,
+ "points" : [{
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
+ }
+ ]
+ },
+ "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+ "ID" : 2154,
+ "name" : "Postyan"
  }
  */
 apis.sarOfficeProperty = function (data) {
 
-    var obj = {}
-    obj.type = "Feature";
     var properties = {}
     properties.SMID = data.fieldValues[0];
     properties.SMX = data.fieldValues[1];
@@ -591,18 +595,25 @@ apis.sarOfficeProperty = function (data) {
     properties.FIELD_SMGEOPOSITION = -1;
     properties.stringID = null;
     properties.ID = data.ID;
-    obj.properties = properties;
 
-    var geometry = {}
-    geometry.type = "Point";
-    geometry.coordinates = [data.geometry.center.x, data.geometry.center.y];
+    //add convert here
+    var obj = {}
+    obj.stringID = null;
+    obj.fieldNames = ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"];
+    var geometry = data.geometry;
     obj.geometry = geometry;
 
+    var fieldValues = [
+        properties.SMID, properties.SMX, properties.SMY, properties.SMLIBTILEID, properties.SMUSERID, properties.NAME, properties.NAME_NATIVE,
+        properties.NAME_EN, properties.NAME_CH, properties.KIND, properties.TYPE, properties.FIELD_SMGEOPOSITION
+    ];
+    obj.fieldValues = fieldValues;
+
     obj.ID = data.ID;
+    obj.name = properties.NAME;
 
     return obj;
 }
-
 
 /*
  {
@@ -629,35 +640,34 @@ apis.sarOfficeProperty = function (data) {
 
  to
 
+
  {
- "type" : "Feature",
- "properties" : {
- "SMID" : "459008",
- "SMX" : "1.29959100622925E7",
- "SMY" : "418922.86921557",
- "SMLIBTILEID" : "1",
- "SMUSERID" : "0",
- "NAME" : "Warung Maskampret",
- "NAME_NATIVE" : "",
- "NAME_EN" : "",
- "NAME_CH" : "",
- "KIND" : "restaurant",
- "TYPE" : "tourism",
- "FIELD_SMGEOPOSITION" : "-1",
  "stringID" : null,
- "ID" : 459008
- },
+ "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
  "geometry" : {
- "type" : "Point",
- "coordinates" : [12995910.0622925, 418922.86921557]
+ "center" : {
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
  },
- "id" : 459008
+ "parts" : [1],
+ "style" : null,
+ "prjCoordSys" : null,
+ "id" : 2154,
+ "type" : "POINT",
+ "partTopo" : null,
+ "points" : [{
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
+ }
+ ]
+ },
+ "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+ "ID" : 2154,
+ "name" : "Postyan"
  }
  */
 apis.hospitalProperty = function (data) {
 
-    var obj = {}
-    obj.type = "Feature";
     var properties = {}
     properties.SMID = data.fieldValues[0];
     properties.SMX = data.fieldValues[1];
@@ -673,18 +683,25 @@ apis.hospitalProperty = function (data) {
     properties.FIELD_SMGEOPOSITION = data.fieldValues[8];
     properties.stringID = null;
     properties.ID = data.ID;
-    obj.properties = properties;
 
-    var geometry = {}
-    geometry.type = "Point";
-    geometry.coordinates = [data.geometry.center.x, data.geometry.center.y];
+    var obj = {}
+    obj.stringID = null;
+    obj.fieldNames = ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"];
+    var geometry = data.geometry;
     obj.geometry = geometry;
 
+    var fieldValues = [
+        properties.SMID, properties.SMX, properties.SMY, properties.SMLIBTILEID, properties.SMUSERID, properties.NAME, properties.NAME_NATIVE,
+        properties.NAME_EN, properties.NAME_CH, properties.KIND, properties.TYPE, properties.FIELD_SMGEOPOSITION
+    ];
+    obj.fieldValues = fieldValues;
+
     obj.ID = data.ID;
+    obj.name = properties.NAME;
 
     return obj;
-}
 
+}
 
 /*
  {
@@ -712,34 +729,32 @@ apis.hospitalProperty = function (data) {
  to
 
  {
- "type" : "Feature",
- "properties" : {
- "SMID" : "459008",
- "SMX" : "1.29959100622925E7",
- "SMY" : "418922.86921557",
- "SMLIBTILEID" : "1",
- "SMUSERID" : "0",
- "NAME" : "Warung Maskampret",
- "NAME_NATIVE" : "",
- "NAME_EN" : "",
- "NAME_CH" : "",
- "KIND" : "restaurant",
- "TYPE" : "tourism",
- "FIELD_SMGEOPOSITION" : "-1",
  "stringID" : null,
- "ID" : 459008
- },
+ "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
  "geometry" : {
- "type" : "Point",
- "coordinates" : [12995910.0622925, 418922.86921557]
+ "center" : {
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
  },
- "id" : 459008
+ "parts" : [1],
+ "style" : null,
+ "prjCoordSys" : null,
+ "id" : 2154,
+ "type" : "POINT",
+ "partTopo" : null,
+ "points" : [{
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
+ }
+ ]
+ },
+ "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+ "ID" : 2154,
+ "name" : "Postyan"
  }
  */
 apis.policeProperty = function (data) {
 
-    var obj = {}
-    obj.type = "Feature";
     var properties = {}
     properties.SMID = data.fieldValues[0];
     properties.SMX = data.fieldValues[1];
@@ -755,14 +770,21 @@ apis.policeProperty = function (data) {
     properties.FIELD_SMGEOPOSITION = data.fieldValues[11];
     properties.stringID = null;
     properties.ID = data.ID;
-    obj.properties = properties;
 
-    var geometry = {}
-    geometry.type = "Point";
-    geometry.coordinates = [data.geometry.center.x, data.geometry.center.y];
+    var obj = {}
+    obj.stringID = null;
+    obj.fieldNames = ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"];
+    var geometry = data.geometry;
     obj.geometry = geometry;
 
+    var fieldValues = [
+        properties.SMID, properties.SMX, properties.SMY, properties.SMLIBTILEID, properties.SMUSERID, properties.NAME, properties.NAME_NATIVE,
+        properties.NAME_EN, properties.NAME_CH, properties.KIND, properties.TYPE, properties.FIELD_SMGEOPOSITION
+    ];
+    obj.fieldValues = fieldValues;
+
     obj.ID = data.ID;
+    obj.name = properties.NAME;
 
     return obj;
 }
@@ -794,34 +816,32 @@ apis.policeProperty = function (data) {
  to
 
  {
- "type" : "Feature",
- "properties" : {
- "SMID" : "459008",
- "SMX" : "1.29959100622925E7",
- "SMY" : "418922.86921557",
- "SMLIBTILEID" : "1",
- "SMUSERID" : "0",
- "NAME" : "Warung Maskampret",
- "NAME_NATIVE" : "",
- "NAME_EN" : "",
- "NAME_CH" : "",
- "KIND" : "restaurant",
- "TYPE" : "tourism",
- "FIELD_SMGEOPOSITION" : "-1",
  "stringID" : null,
- "ID" : 459008
- },
+ "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
  "geometry" : {
- "type" : "Point",
- "coordinates" : [12995910.0622925, 418922.86921557]
+ "center" : {
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
  },
- "id" : 459008
+ "parts" : [1],
+ "style" : null,
+ "prjCoordSys" : null,
+ "id" : 2154,
+ "type" : "POINT",
+ "partTopo" : null,
+ "points" : [{
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
+ }
+ ]
+ },
+ "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+ "ID" : 2154,
+ "name" : "Postyan"
  }
  */
 apis.logdataProperty = function (data) {
 
-    var obj = {}
-    obj.type = "Feature";
     var properties = {}
     properties.SMID = data.fieldValues[0];
     properties.SMX = data.fieldValues[1];
@@ -837,18 +857,24 @@ apis.logdataProperty = function (data) {
     properties.FIELD_SMGEOPOSITION = -1;
     properties.stringID = null;
     properties.ID = data.ID;
-    obj.properties = properties;
 
-    var geometry = {}
-    geometry.type = "Point";
-    geometry.coordinates = [data.geometry.center.x, data.geometry.center.y];
+    var obj = {}
+    obj.stringID = null;
+    obj.fieldNames = ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"];
+    var geometry = data.geometry;
     obj.geometry = geometry;
 
+    var fieldValues = [
+        properties.SMID, properties.SMX, properties.SMY, properties.SMLIBTILEID, properties.SMUSERID, properties.NAME, properties.NAME_NATIVE,
+        properties.NAME_EN, properties.NAME_CH, properties.KIND, properties.TYPE, properties.FIELD_SMGEOPOSITION
+    ];
+    obj.fieldValues = fieldValues;
+
     obj.ID = data.ID;
+    obj.name = properties.NAME;
 
     return obj;
 }
-
 
 /*
  {
@@ -876,34 +902,32 @@ apis.logdataProperty = function (data) {
  to
 
  {
- "type" : "Feature",
- "properties" : {
- "SMID" : "459008",
- "SMX" : "1.29959100622925E7",
- "SMY" : "418922.86921557",
- "SMLIBTILEID" : "1",
- "SMUSERID" : "0",
- "NAME" : "Warung Maskampret",
- "NAME_NATIVE" : "",
- "NAME_EN" : "",
- "NAME_CH" : "",
- "KIND" : "restaurant",
- "TYPE" : "tourism",
- "FIELD_SMGEOPOSITION" : "-1",
  "stringID" : null,
- "ID" : 459008
- },
+ "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
  "geometry" : {
- "type" : "Point",
- "coordinates" : [12995910.0622925, 418922.86921557]
+ "center" : {
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
  },
- "id" : 459008
+ "parts" : [1],
+ "style" : null,
+ "prjCoordSys" : null,
+ "id" : 2154,
+ "type" : "POINT",
+ "partTopo" : null,
+ "points" : [{
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
+ }
+ ]
+ },
+ "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+ "ID" : 2154,
+ "name" : "Postyan"
  }
  */
 apis.helicopterProperty = function (data) {
 
-    var obj = {}
-    obj.type = "Feature";
     var properties = {}
     properties.SMID = data.fieldValues[0];
     properties.SMX = data.fieldValues[1];
@@ -919,14 +943,21 @@ apis.helicopterProperty = function (data) {
     properties.FIELD_SMGEOPOSITION = -1;
     properties.stringID = null;
     properties.ID = data.ID;
-    obj.properties = properties;
 
-    var geometry = {}
-    geometry.type = "Point";
-    geometry.coordinates = [data.geometry.center.x, data.geometry.center.y];
+    var obj = {}
+    obj.stringID = null;
+    obj.fieldNames = ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"];
+    var geometry = data.geometry;
     obj.geometry = geometry;
 
+    var fieldValues = [
+        properties.SMID, properties.SMX, properties.SMY, properties.SMLIBTILEID, properties.SMUSERID, properties.NAME, properties.NAME_NATIVE,
+        properties.NAME_EN, properties.NAME_CH, properties.KIND, properties.TYPE, properties.FIELD_SMGEOPOSITION
+    ];
+    obj.fieldValues = fieldValues;
+
     obj.ID = data.ID;
+    obj.name = properties.NAME;
 
     return obj;
 }
@@ -958,34 +989,32 @@ apis.helicopterProperty = function (data) {
  to
 
  {
- "type" : "Feature",
- "properties" : {
- "SMID" : "459008",
- "SMX" : "1.29959100622925E7",
- "SMY" : "418922.86921557",
- "SMLIBTILEID" : "1",
- "SMUSERID" : "0",
- "NAME" : "Warung Maskampret",
- "NAME_NATIVE" : "",
- "NAME_EN" : "",
- "NAME_CH" : "",
- "KIND" : "restaurant",
- "TYPE" : "tourism",
- "FIELD_SMGEOPOSITION" : "-1",
  "stringID" : null,
- "ID" : 459008
- },
+ "fieldNames" : ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"],
  "geometry" : {
- "type" : "Point",
- "coordinates" : [12995910.0622925, 418922.86921557]
+ "center" : {
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
  },
- "id" : 459008
+ "parts" : [1],
+ "style" : null,
+ "prjCoordSys" : null,
+ "id" : 2154,
+ "type" : "POINT",
+ "partTopo" : null,
+ "points" : [{
+ "x" : 1.29481414995633E7,
+ "y" : -981398.567620345
+ }
+ ]
+ },
+ "fieldValues" : ["2154", "1.29481414995633E7", "-981398.567620345", "1", "0", "posyandu gubuk derik", "", "", "", "emergency_access_point", "highway", "-1"],
+ "ID" : 2154,
+ "name" : "Postyan"
  }
  */
 apis.mobilePositionProperty = function (data) {
 
-    var obj = {}
-    obj.type = "Feature";
     var properties = {}
     properties.SMID = data.fieldValues[0];
     properties.SMX = data.fieldValues[1];
@@ -1001,16 +1030,24 @@ apis.mobilePositionProperty = function (data) {
     properties.FIELD_SMGEOPOSITION = -1;
     properties.stringID = null;
     properties.ID = data.ID;
-    obj.properties = properties;
 
-    var geometry = {}
-    geometry.type = "Point";
-    geometry.coordinates = [data.geometry.center.x, data.geometry.center.y];
+    var obj = {}
+    obj.stringID = null;
+    obj.fieldNames = ["SMID", "SMX", "SMY", "SMLIBTILEID", "SMUSERID", "NAME", "NAME_NATIVE", "NAME_EN", "NAME_CH", "KIND", "TYPE", "FIELD_SMGEOPOSITION"];
+    var geometry = data.geometry;
     obj.geometry = geometry;
 
+    var fieldValues = [
+        properties.SMID, properties.SMX, properties.SMY, properties.SMLIBTILEID, properties.SMUSERID, properties.NAME, properties.NAME_NATIVE,
+        properties.NAME_EN, properties.NAME_CH, properties.KIND, properties.TYPE, properties.FIELD_SMGEOPOSITION
+    ];
+    obj.fieldValues = fieldValues;
+
     obj.ID = data.ID;
+    obj.name = properties.NAME;
 
     return obj;
+
 }
 
 

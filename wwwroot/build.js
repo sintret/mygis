@@ -203,8 +203,7 @@
                     "processCompleted" === n.type ? e(i.readFeatures(r)) : t("err")
                 })
             })
-        }, getFeaturesBySQL: function (e, t, n, a, datas) {
-            datas = datas || null
+        }, getFeaturesBySQL: function (e, t, n, a) {
             var o = arguments.length > 4 && void 0 !== arguments[4] ? arguments[4] : 0, r = arguments.length > 5 && void 0 !== arguments[5] ? arguments[5] : 100, A = new SuperMap.GetFeaturesBySQLParameters({
                 fromIndex: o,
                 toIndex: r,
@@ -214,11 +213,7 @@
 
             return new Promise(function (t, n) {
                 return new ol.supermap.FeatureService(e).getFeaturesBySQL(A, function (e) {
-                    if (datas == null) {
-                        t(i.readFeatures(e.result.features));
-                    } else {
-                        t(i.readFeatures(datas));
-                    }
+                     t(i.readFeatures(e.result.features));
                 })
             })
         }, template: function (e, t) {
@@ -1848,11 +1843,9 @@
                     if(t == ""){
                         $(".search-result").hide();
                     } else {
-                        $.getJSON("/search/" + t, function (myData) {
-                            "" !== t && l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + t + "%testt'", myData).then(function (t) {
+                            "" !== t && l.a.getFeaturesBySQL("/search", "text", t, t).then(function (t) {
                                 e.searchList.setResult(t);
                             })
-                        })
                     }
 
                 }), this.$(".search-input").keyup(function (t) {
@@ -1862,20 +1855,12 @@
                         if (a == "") {
                             $(".search-result").hide();
                         } else {
-                            $.getJSON("/search/" + a, function (myData) {
-                                l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + a + "%'", myData).then(function (t) {
+                                l.a.getFeaturesBySQL("/search", "text", a, a).then(function (t) {
                                     e.searchList.setResult(t);
                                 }), 8 == n && "" == a && e.searchList.removeResult()
-                            })
 
                         }
                     }
-
-
-                    /*         13 == n && "" != a && l.a.getFeaturesBySQL("http://igis.basarnas.go.id:8099/iserver/services/data-SARData/rest/data", "Indonesia_3857", "poi_pt", "NAME LIKE '%" + a + "%'").then(function (t) {
-                     e.searchList.setResult(t)
-                     }), 8 == n && "" == a && e.searchList.removeResult()
-                     })*/
                 })
             }
         }]), t
